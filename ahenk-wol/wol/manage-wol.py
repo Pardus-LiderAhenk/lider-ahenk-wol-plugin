@@ -33,17 +33,22 @@ class ManageWol(AbstractCommand):
         return b
 
     def make_script(self):
-        for device in self.connected_devices:
-            with open('/etc/init.d/wol.sh', 'w+') as f:
-                f.write('### BEGIN INIT INFO\n'
-                        '# Provides:          wake-on-lan\n'
-                        '# Required-Start:    $remote_fs $syslog\n'
-                        '# Required-Stop:     $remote_fs $syslog\n'
-                        '# Default-Start:     2 3 4 5\n'
-                        '# Default-Stop:      0 1 6\n'
-                        '### END INIT INFO\n'
-                        '#!/bin/bash\n'
-                        'ethtool -s ' + device + ' wol g\n')
+        with open('/etc/init.d/wol.sh', 'w+') as f:
+            for device in self.connected_devices:
+                if f.tell() == 0:
+                    f.write('### BEGIN INIT INFO\n'
+                            '# Provides:          wake-on-lan\n'
+                            '# Required-Start:    $remote_fs $syslog\n'
+                            '# Required-Stop:     $remote_fs $syslog\n'
+                            '# Default-Start:     2 3 4 5\n'
+                            '# Default-Stop:      0 1 6\n'
+                            '### END INIT INFO\n'
+                            '#!/bin/bash\n'
+                            'ethtool -s ' + device + ' wol g\n')
+                else:
+                    f.write('ethtool -s ' + device + ' wol g\n')
+
+        f.close()
 
         # Make the script executable
         process = self.context.execute('chmod +x /etc/init.d/wol.sh')
