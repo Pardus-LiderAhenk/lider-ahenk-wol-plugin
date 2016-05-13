@@ -3,13 +3,13 @@ package tr.org.liderahenk.wol.handlers;
 import org.eclipse.swt.widgets.Display;
 
 import tr.org.liderahenk.liderconsole.core.handlers.SingleSelectionHandler;
-import tr.org.liderahenk.wol.dialogs.ManageWolTaskDialog;
+import tr.org.liderahenk.wol.dialogs.WakeMachineTaskDialog;;
 
-public class ManageWolTaskHandler extends SingleSelectionHandler {
-	
+public class WakeMachineTaskHandler  extends SingleSelectionHandler {
+
 	@Override
 	public void executeWithDn(String dn) {
-		ManageWolTaskDialog dialog = new ManageWolTaskDialog(Display.getDefault().getActiveShell(), dn);
+		WakeMachineTaskDialog dialog = new WakeMachineTaskDialog(Display.getDefault().getActiveShell(), dn);
 		dialog.create();
 		dialog.open();
 	}

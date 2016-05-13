@@ -10,23 +10,23 @@
       </category>         
       <command
             categoryId="tr.org.liderahenk.liderconsole.commands.category"
-            id="tr.org.liderahenk.liderconsole.commands.WolProfile"            
-            name="%command.profile">
+            id="tr.org.liderahenk.liderconsole.commands.WolTask"            
+            name="%command.task">
       </command>
       <command
             categoryId="tr.org.liderahenk.liderconsole.commands.category"
-            id="tr.org.liderahenk.liderconsole.commands.WolTask"            
-            name="%command.task">
+            id="tr.org.liderahenk.liderconsole.commands.WakeMachineTask"            
+            name="%command.wake.task">
       </command>
    </extension>
    
    <extension
        point="org.eclipse.ui.handlers">
 
-		<!-- Profile handler -->
-       	<handler
-            class="tr.org.liderahenk.wol.handlers.WolProfileHandler"
-            commandId="tr.org.liderahenk.liderconsole.commands.WolProfile">
+      	<!-- Task handler -->
+       <handler
+            class="tr.org.liderahenk.wol.handlers.ManageWolTaskHandler"
+            commandId="tr.org.liderahenk.liderconsole.commands.WolTask">
            <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
 		   <!-- <enabledWhen>
 				<and>
@@ -44,12 +44,10 @@
 	          	</with>
 		       </and>
 		    </enabledWhen> -->        
-      	</handler>
-      	
-      	<!-- Task handler -->
-       <handler
-            class="tr.org.liderahenk.wol.handlers.WolTaskHandler"
-            commandId="tr.org.liderahenk.liderconsole.commands.WolTask">
+      </handler>
+      <handler
+            class="tr.org.liderahenk.wol.handlers.WakeMachineTaskHandler"
+            commandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask">
            <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
 		   <!-- <enabledWhen>
 				<and>
@@ -74,45 +72,6 @@
   <extension
          point="org.eclipse.ui.menus">
 
-		<!-- Add menu command for "profile definition" dialog -->
-		<menuContribution
-      		allPopups="false"
-            locationURI="popup:tr.org.liderahenk.liderconsole.menus.ProfileDefinition?after=additions">
- 				<command
-                  commandId="tr.org.liderahenk.liderconsole.commands.WolProfile"
-                  id="tr.org.liderahenk.liderconsole.commands.WolProfile"
-                  icon="icons/sample.png"
-                  tooltip="%command.profile">
-                  <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
-				  <!-- <visibleWhen>
-					   <and>
-			                <iterate operator="or">		
-			                	<or>
-							  	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isSearchSelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					          	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isEntrySelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					        	</or>
-					        </iterate>
-							<with
-				                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
-				             	<equals
-					                   value="true">
-					            </equals>
-				          	</with>
-					    </and>
-					</visibleWhen> -->               
-           		</command>
-		</menuContribution>
-      
       	<!-- Add extension point contribution for "task execution" dialogs -->
 		<menuContribution
       		allPopups="false"
@@ -150,12 +109,42 @@
 					</visibleWhen> -->               
            		</command>
 		</menuContribution>
+		<menuContribution
+      		allPopups="false"
+            locationURI="popup:tr.org.liderahenk.liderconsole.menus.ApplyTask?after=additions">
+ 				<command
+                  commandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask"
+                  id="tr.org.liderahenk.liderconsole.commands.WakeMachineTask"
+                  tooltip="%command.wake.task">
+                  <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
+				  <!-- <visibleWhen>
+					   <and>
+			                <iterate operator="or">		
+			                	<or>
+							  	<with
+					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isSearchSelected">
+						             <equals
+						                   value="true">
+						             </equals>
+					          	</with>
+					          	<with
+					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isEntrySelected">
+						             <equals
+						                   value="true">
+						             </equals>
+					          	</with>
+					        	</or>
+					        </iterate>
+							<with
+				                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
+				             	<equals
+					                   value="true">
+					            </equals>
+				          	</with>
+					    </and>
+					</visibleWhen> -->               
+           		</command>
+		</menuContribution>
   </extension>
   
-	<!-- Add extension point contribution for "policy execution" dialogs -->
-	<extension
-  		point="tr.org.liderahenk.liderconsole.core.policymenu">
-  		<policyItem label="%command.profile" pluginName="wol" pluginVersion="1.0.0" profileCommandId="tr.org.liderahenk.liderconsole.commands.WolProfile" />
-  	</extension>
-  	
 </plugin>
