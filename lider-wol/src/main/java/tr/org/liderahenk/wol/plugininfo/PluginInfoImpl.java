@@ -36,7 +36,7 @@ public class PluginInfoImpl implements IPluginInfo {
 	private String distroPassword;
 
 	private String distroPath;
-
+	
 	public void refresh() {
 		logger.info("Configuration updated using blueprint: {}", prettyPrintConfig());
 	}
@@ -152,7 +152,7 @@ public class PluginInfoImpl implements IPluginInfo {
 	public void setDistroPath(String distroPath) {
 		this.distroPath = distroPath;
 	}
-
+	
 	@JsonIgnore
 	@Override
 	public IPluginDistro getDistro() {
