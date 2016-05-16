@@ -15,8 +15,12 @@ class ManageWol(AbstractCommand):
         self.connected_devices = self.get_connected_devices()
 
     def handle_task(self):
-        process = self.context.execute('apt-get -y install ethtool')
-        process.wait()
+        checking = os.popen('dpkg-query -W -f=\'${Status}\' ethtool')
+        result = checking.read()
+
+        if result != 'install ok installed':
+            process = self.context.execute('apt-get -y install ethtool')
+            process.wait()
 
         for device in self.connected_devices:
             process = self.context.execute('ethtool -s ' + device + ' wol g')
