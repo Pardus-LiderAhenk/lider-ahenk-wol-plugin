@@ -3,15 +3,16 @@
 # Author:Mine DOGAN <mine.dogan@agem.com.tr>
 
 import os
-from base.model.enum.MessageCode import MessageCode
-from base.plugin.AbstractCommand import AbstractCommand
+from base.plugin.abstract_plugin import AbstractPlugin
 
-class ManageWol(AbstractCommand):
 
+class ManageWol(AbstractPlugin):
     def __init__(self, task, context):
-        super(ManageWol, self).__init__()
+        super(AbstractPlugin, self).__init__()
         self.task = task
         self.context = context
+        self.logger = self.get_logger()
+        self.message_code = self.get_message_code()
         self.connected_devices = self.get_connected_devices()
 
     def handle_task(self):
@@ -19,16 +20,17 @@ class ManageWol(AbstractCommand):
         result = checking.read()
 
         if result != 'install ok installed':
-            process = self.context.execute('apt-get -y install ethtool')
+            process = self.execute('apt-get -y install ethtool')
             process.wait()
 
         for device in self.connected_devices:
-            process = self.context.execute('ethtool -s ' + device + ' wol g')
+            process = self.execute('ethtool -s ' + device + ' wol g')
             process.wait()
 
         self.make_script()
 
-        self.create_response(message='_message')
+        # TODO is task handled successfully? keep and response code and message
+        self.context.create_response(code=self.message_code.TASK_PROCESSED.value, message='User wol task processed successfully')
 
     def get_connected_devices(self):
         f = os.popen("nmcli --terse --fields DEVICE,STATE dev | grep -w 'connected' | awk -F':' '{print $1}'")
@@ -61,15 +63,6 @@ class ManageWol(AbstractCommand):
         # Tell Linux to execute the script on every runlevel
         process = self.context.execute('update-rc.d -f wol.sh defaults')
         process.wait()
-
-    def create_response(self, success=True, message=None, data=None, content_type=None):
-        if success:
-            self.context.put('responseCode', MessageCode.TASK_PROCESSED.value)
-        else:
-            self.context.put('responseCode', MessageCode.TASK_ERROR.value)
-        self.context.put('responseMessage', message)
-        # self.context.put('responseData')
-        # self.context.put('contentType')
 
 
 def handle_task(task, context):
