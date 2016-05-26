@@ -20,15 +20,11 @@ class ManageWol(AbstractPlugin):
         result = checking.read()
 
         if result != 'install ok installed':
-            process = self.execute('apt-get -y install ethtool')
-            process.wait()
+            self.execute('apt-get -y install ethtool')
 
         for device in self.connected_devices:
-            process = self.execute('ethtool -s ' + device + ' wol g')
-            process.wait()
-
+            self.execute('ethtool -s ' + device + ' wol g')
         self.make_script()
-
         # TODO is task handled successfully? keep and response code and message
         self.context.create_response(code=self.message_code.TASK_PROCESSED.value, message='User wol task processed successfully')
 
@@ -53,16 +49,12 @@ class ManageWol(AbstractPlugin):
                             'ethtool -s ' + device + ' wol g\n')
                 else:
                     f.write('ethtool -s ' + device + ' wol g\n')
-
         f.close()
 
         # Make the script executable
-        process = self.context.execute('chmod +x /etc/init.d/wol.sh')
-        process.wait()
-
+        self.execute('chmod +x /etc/init.d/wol.sh')
         # Tell Linux to execute the script on every runlevel
-        process = self.context.execute('update-rc.d -f wol.sh defaults')
-        process.wait()
+        self.execute('update-rc.d -f wol.sh defaults')
 
 
 def handle_task(task, context):
