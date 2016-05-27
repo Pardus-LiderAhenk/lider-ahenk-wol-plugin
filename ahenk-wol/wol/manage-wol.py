@@ -12,9 +12,6 @@ class ManageWol(AbstractPlugin):
         super(AbstractPlugin, self).__init__()
         self.task = task
         self.context = context
-        self.check_installation = 'dpkg-query -W -f=\'${Status}\' ethtool'
-        self.installed = 'install ok installed'
-        self.install = 'apt-get -y install ethtool'
         self.script_path = '/etc/init.d/wol.sh'
         self.execute_script = 'update-rc.d -f wol.sh defaults'
         self.connected_interfaces = System.Hardware.Network.interfaces()
@@ -24,13 +21,6 @@ class ManageWol(AbstractPlugin):
 
     def handle_task(self):
         try:
-            checking = os.popen(self.check_installation)
-            result = checking.read()
-
-            if result != self.installed:
-                self.logger.debug('[WOL] Installing ethtool')
-                self.execute(self.install)
-
             for interface in self.connected_interfaces:
                 self.logger.debug('[WOL] Activating magic packet for ' + str(interface))
                 self.execute('ethtool -s ' + str(interface) + ' wol g')
