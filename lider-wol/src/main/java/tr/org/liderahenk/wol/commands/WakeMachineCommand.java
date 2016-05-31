@@ -22,90 +22,116 @@ import tr.org.liderahenk.wol.plugininfo.PluginInfoImpl;
 /**
  * 
  * @author <a href="mailto:mine.dogan@agem.com.tr">Mine Dogan</a>
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  *
  */
 public class WakeMachineCommand implements ICommand {
-	
+
 	private Logger logger = LoggerFactory.getLogger(WakeMachineCommand.class);
-	
+
 	private ICommandResultFactory resultFactory;
 	private PluginInfoImpl pluginInfo;
-	
+
 	private IAgentDao agentDao;
-	
+
 	private String liderPassword;
 
 	@Override
 	public ICommandResult execute(ICommandContext context) throws Exception {
-		
-		ICommandResult commandResult = null;
-		
+
+		// Find target agent
 		String dn = context.getRequest().getDnList().get(0);
-        Map<String, Object> propertiesMap = new HashMap<String, Object>();
-        propertiesMap.put("dn", dn);
-        List<? extends IAgent> agents = agentDao.findByProperties(IAgent.class, propertiesMap, null, 1);
-        IAgent agent = agents.get(0);
-        String[] macAddresses = agent.getMacAddresses().split(",");
-        String[] ipAddresses = agent.getIpAddresses().split(",");
-        
-        for (int i = 0; i < macAddresses.length; i++) {
-			String macAddress = macAddresses[i];
-			macAddress = macAddress.replace("'", "");
-			String ipAddress = ipAddresses[i];
-			ipAddress = ipAddress.replace("'", "");
-			
+		Map<String, Object> propertiesMap = new HashMap<String, Object>();
+		propertiesMap.put("dn", dn);
+		List<? extends IAgent> agents = agentDao.findByProperties(IAgent.class, propertiesMap, null, 1);
+		IAgent agent = agents.get(0);
+
+		String[] macAddresses = agent.getMacAddresses().replace(",", "").split(",");
+		String[] ipAddresses = agent.getIpAddresses().replace(",", "").split(",");
+
+		// We do not know which one of the MAC addresses resides in the same
+		// network with Lider, so send 'magic packet' to all MAC addresses to
+		// wake the machine up.
+		for (int i = 0; i < macAddresses.length; i++) {
 			try {
-            	String command = "echo " + liderPassword + " | sudo -S wakeonlan " + macAddress;
-                Process process = Runtime.getRuntime().exec(command);
-                int exitValue = process.waitFor();
-                if (exitValue != 0) {
-                	logger.error("Failed to execute command: " + command);
-                }
-                Thread.sleep(1000);
-                
-                String pingCommand = "ping -c1 -W1 " + ipAddress;
-                process = Runtime.getRuntime().exec(pingCommand);
-                exitValue = process.waitFor();
-                if (exitValue != 0) {
-                	logger.error("Failed to execute command: " + pingCommand);
-                }
-                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                
-                // read the output from the command
-                String commandOutput = null;
-                while ((commandOutput = stdInput.readLine()) != null) {
-                    if(commandOutput.contains("100% packet loss")) {
-                    	commandResult = resultFactory.create(CommandResultStatus.ERROR, new ArrayList<String>(), this);
-                    }
-                    else {
-                    	commandResult = resultFactory.create(CommandResultStatus.OK, new ArrayList<String>(), this);
-                    }
-                }
-                
-                
-            } catch (Exception e) {
-            	logger.error(e.getMessage(), e);
-            }
+				// TODO IMPROVEMENT: do not pass password using echo!
+				String command = "echo " + liderPassword + " | sudo -S wakeonlan " + macAddresses[i];
+				Process process = Runtime.getRuntime().exec(command);
+				int exitValue = process.waitFor();
+				if (exitValue != 0) {
+					logger.error("Failed to execute command: " + command);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
-		
-		return commandResult;
+
+		// Finally, check if the machine is up and accessible
+		boolean accessible = checkMachine(ipAddresses);
+		return resultFactory.create(accessible ? CommandResultStatus.OK : CommandResultStatus.ERROR,
+				new ArrayList<String>(), this);
+	}
+
+	/**
+	 * Check whether specified IP addresses is accessible or not by using ping.
+	 * 
+	 * @param ipAddresses
+	 * @return
+	 */
+	private boolean checkMachine(String[] ipAddresses) {
+
+		boolean accessible = false;
+
+		// Wait a little while for machine to start
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		for (String ipAddress : ipAddresses) {
+			try {
+				// 'success' will be returned if the ping succeeds, 'fail'
+				// otherwise.
+				String pingCommand = "ping -c1 -W2 " + ipAddress
+						+ " > /dev/null 2>&1 && echo \"success\" || echo \"fail\"";
+				Process process = Runtime.getRuntime().exec(pingCommand);
+				int exitValue = process.waitFor();
+				if (exitValue != 0) {
+					logger.error("Failed to execute command: " + pingCommand);
+				}
+				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+				String output = null;
+				while ((output = stdInput.readLine()) != null) {
+					accessible = output.equalsIgnoreCase("success");
+					if (accessible) {
+						break;
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+		return accessible;
 	}
 
 	@Override
 	public ICommandResult validate(ICommandContext context) {
 		return resultFactory.create(CommandResultStatus.OK, null, this, null);
 	}
-	
+
 	@Override
 	public String getCommandId() {
 		return "WAKE-MACHINE";
 	}
-	
+
 	@Override
 	public Boolean executeOnAgent() {
 		return false;
 	}
-	
+
 	public void setResultFactory(ICommandResultFactory resultFactory) {
 		this.resultFactory = resultFactory;
 	}
@@ -119,7 +145,7 @@ public class WakeMachineCommand implements ICommand {
 	public String getPluginVersion() {
 		return pluginInfo.getPluginVersion();
 	}
-	
+
 	public void setPluginInfo(PluginInfoImpl pluginInfoImpl) {
 		this.pluginInfo = pluginInfoImpl;
 	}
