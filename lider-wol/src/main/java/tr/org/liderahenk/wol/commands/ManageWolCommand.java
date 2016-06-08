@@ -53,9 +53,9 @@ public class ManageWolCommand implements ICommand {
 	public String getPluginVersion() {
 		return pluginInfo.getPluginVersion();
 	}
-	
+
 	public void setPluginInfo(PluginInfoImpl pluginInfoImpl) {
 		this.pluginInfo = pluginInfoImpl;
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 package tr.org.liderahenk.wol.report.templates;
 
-import java.util.List;
+import java.util.Set;
 
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplateColumn;
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplateParameter;
@@ -29,13 +29,13 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 	}
 
 	@Override
-	public List<? extends IReportTemplateParameter> getTemplateParams() {
+	public Set<? extends IReportTemplateParameter> getTemplateParams() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<? extends IReportTemplateColumn> getTemplateColumns() {
+	public Set<? extends IReportTemplateColumn> getTemplateColumns() {
 		// TODO Auto-generated method stub
 		return null;
 	}

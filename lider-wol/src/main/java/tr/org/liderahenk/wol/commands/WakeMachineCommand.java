@@ -55,11 +55,26 @@ public class WakeMachineCommand implements ICommand {
 		for (int i = 0; i < macAddresses.length; i++) {
 			try {
 				// TODO IMPROVEMENT: do not pass password using echo!
-				String command = "echo " + liderPassword + " | sudo -S wakeonlan " + macAddresses[i];
+				String command = "wakeonlan " + macAddresses[i];
 				Process process = Runtime.getRuntime().exec(command);
+
+				// Read command output
+				String line, output = "", outputErr = "";
+				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				while ((line = stdInput.readLine()) != null) {
+					output += line;
+				}
+				BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				while ((line = stdErr.readLine()) != null) {
+					outputErr += line;
+				}
+
 				int exitValue = process.waitFor();
 				if (exitValue != 0) {
-					logger.error("Failed to execute command: " + command);
+					logger.error("Failed to execute command. Exit value: {}, Output: {}, Error: {}",
+							new Object[] { exitValue, output, outputErr });
+				} else {
+					logger.info("Executed command. Output: {}", output);
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -84,26 +99,33 @@ public class WakeMachineCommand implements ICommand {
 
 		// Wait a little while for machine to start
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		}
 
 		for (String ipAddress : ipAddresses) {
 			try {
-				// 'success' will be returned if the ping succeeds, 'fail'
-				// otherwise.
-				String pingCommand = "ping -c1 -W2 " + ipAddress
-						+ " > /dev/null 2>&1 && echo \"success\" || echo \"fail\"";
-				Process process = Runtime.getRuntime().exec(pingCommand);
+				// 'success' is returned if the ping succeeds, 'fail' otherwise.
+				String command = "ping -c1 " + ipAddress + " > /dev/null 2>&1 && echo \"success\" || echo \"fail\"";
+				Process process = Runtime.getRuntime().exec(command);
+
+				// Read command output
+				String line, output = "", outputErr = "";
+				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				while ((line = stdInput.readLine()) != null) {
+					output += line;
+				}
+				BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				while ((line = stdErr.readLine()) != null) {
+					outputErr += line;
+				}
+
 				int exitValue = process.waitFor();
 				if (exitValue != 0) {
-					logger.error("Failed to execute command: " + pingCommand);
-				}
-				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-				String output = null;
-				while ((output = stdInput.readLine()) != null) {
+					logger.error("Failed to execute command. Exit value: {}, Output: {}, Error: {}",
+							new Object[] { exitValue, output, outputErr });
+				} else {
 					accessible = output.equalsIgnoreCase("success");
 					if (accessible) {
 						break;
