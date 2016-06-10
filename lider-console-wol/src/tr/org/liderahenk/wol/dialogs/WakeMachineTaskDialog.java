@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
+import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
 import tr.org.liderahenk.wol.constants.WolConstants;
 import tr.org.liderahenk.wol.i18n.Messages;
 
@@ -32,8 +33,8 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	}
 
 	@Override
-	public boolean validateBeforeExecution() {
-		return true;
+	public void validateBeforeExecution() throws ValidationException {
+		
 	}
 
 	@Override
