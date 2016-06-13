@@ -25,7 +25,6 @@
         <property name="pluginInfo" ref="pluginInfoImpl" />
         <property name="resultFactory" ref="resultFactoryImpl"/>
         <property name="agentDao" ref="agentDaoImpl"/>
-        <property name="liderPassword" value="${lider.password}"/>
   	</bean>
 	
 	<!-- IPluginInfo implementation is used to register plugin -->
