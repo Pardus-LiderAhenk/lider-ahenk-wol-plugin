@@ -22,12 +22,15 @@ class WakeMachine(AbstractPlugin):
 
     def handle_task(self):
         try:
+            if self.is_installed('wakeonlan') == False:
+                self.install_with_apt_get('wakeonlan')
+
             result_code_wake, p_out_wake, p_err_wake = self.execute(self.wake_command)
 
             if p_err_wake != '':
                 raise Exception(p_err_wake)
 
-            time.sleep(5)
+            time.sleep(60)
 
             for i, val in enumerate(self.ip_address_list):
                 command = self.ping_command.format(val.replace("'", ""))
