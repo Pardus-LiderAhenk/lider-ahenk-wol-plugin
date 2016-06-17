@@ -40,22 +40,13 @@ class ManageWol(AbstractPlugin):
         with open('/etc/init.d/wol.sh', 'w+') as f:
             for interface in self.connected_interfaces:
                 if f.tell() == 0:
-                    f.write('### BEGIN INIT INFO\n'
-                            '# Provides:          wake-on-lan\n'
-                            '# Required-Start:    $remote_fs $syslog\n'
-                            '# Required-Stop:     $remote_fs $syslog\n'
-                            '# Default-Start:     2 3 4 5\n'
-                            '# Default-Stop:      0 1 6\n'
-                            '### END INIT INFO\n'
-                            '#!/bin/bash\n'
+                    f.write('#!/bin/sh\n'
                             'ethtool -s ' + interface + ' wol g\n')
                 else:
                     f.write('ethtool -s ' + interface + ' wol g\n')
         f.close()
 
-        # Make the script executable
         self.make_executable(self.script_path)
-        # Tell Linux to execute the script on every runlevel
         self.execute(self.execute_script)
 
 
