@@ -23,8 +23,7 @@
   	<bean id="WakeMachineCommand" 
         class="tr.org.liderahenk.wol.commands.WakeMachineCommand">
         <property name="pluginInfo" ref="pluginInfoImpl" />
-        <property name="resultFactory" ref="resultFactoryImpl"/>
-        <property name="agentDao" ref="agentDaoImpl"/>
+        <property name="resultFactory" ref="resultFactory"/>
   	</bean>
 	
 	<!-- IPluginInfo implementation is used to register plugin -->
@@ -44,8 +43,4 @@
 	
   	<reference id="resultFactory" 
   		interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>
-  	<reference id="resultFactoryImpl" 
-  		interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>
-  	<reference id="agentDaoImpl" 
-  		interface="tr.org.liderahenk.lider.core.api.persistence.dao.IAgentDao"/>
 </blueprint>

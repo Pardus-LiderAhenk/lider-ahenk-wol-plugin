@@ -41,18 +41,6 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 	}
 
 	@Override
-	public String getReportHeader() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getReportFooter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String toJson() {
 		// TODO Auto-generated method stub
 		return null;
