@@ -16,6 +16,7 @@ import tr.org.liderahenk.wol.plugininfo.PluginInfoImpl;
 /**
  * 
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ * @author <a href="mailto:mine.dogan@agem.com.tr">Mine Dogan</a>
  *
  */
 public class WakeMachineCommand implements ICommand {
