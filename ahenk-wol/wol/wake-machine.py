@@ -32,11 +32,13 @@ class WakeMachine(AbstractPlugin):
             self.logger.debug('[Wol - Wake Machine] Sending magic package(s) to wake the machine(s)...')
 
             for i, val in enumerate(self.mac_address_list):
-                result_code_wake, p_out_wake, p_err_wake = self.execute(self.wake_command.format(val))
+                mac_addresses = str(val).split(',')
+                for j, mac in enumerate(mac_addresses):
+                    result_code_wake, p_out_wake, p_err_wake = self.execute(self.wake_command.format(mac))
 
-                if p_err_wake != '':
-                    self.logger.debug('[Wol - Wake Machine] An error occured while sending magic package. Mac Address: {}'.format(val))
-                    raise Exception(p_err_wake)
+                    if p_err_wake != '':
+                        self.logger.debug('[Wol - Wake Machine] An error occured while sending magic package. Mac Address: {}'.format(val))
+                        raise Exception(p_err_wake)
 
             time.sleep(120)
 
