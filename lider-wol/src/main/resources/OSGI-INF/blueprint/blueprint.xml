@@ -45,7 +45,7 @@
 	<bean id="taskTemplate"
 		class="tr.org.liderahenk.wol.report.templates.WolReportTemplateImpl" />
 		
-		<bean id="templateManager" class="tr.org.liderahenk.lider.report.TemplateManager" init-method="init">
+		<bean id="templateManager" class="tr.org.liderahenk.wol.report.TemplateManager" init-method="init">
 		<property name="reportDao" ref="reportDao" />
 		<property name="entityFactory" ref="entityFactory" />
 		<property name="templateList" ref="templateList" />
