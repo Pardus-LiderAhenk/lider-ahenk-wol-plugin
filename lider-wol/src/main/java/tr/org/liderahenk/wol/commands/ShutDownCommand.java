@@ -14,13 +14,13 @@ import tr.org.liderahenk.wol.plugininfo.PluginInfoImpl;
  * @author <a href="mailto:mine.dogan@agem.com.tr">Mine Dogan</a>
  *
  */
-public class ManageWolCommand implements ICommand {
-
+public class ShutDownCommand implements ICommand {
+	
 	private ICommandResultFactory resultFactory;
 	private PluginInfoImpl pluginInfo;
 
 	@Override
-	public ICommandResult execute(ICommandContext context) {
+	public ICommandResult execute(ICommandContext context) throws Exception {
 		ICommandResult commandResult = resultFactory.create(CommandResultStatus.OK, new ArrayList<String>(), this);
 		return commandResult;
 	}
@@ -29,17 +29,7 @@ public class ManageWolCommand implements ICommand {
 	public ICommandResult validate(ICommandContext context) {
 		return resultFactory.create(CommandResultStatus.OK, null, this, null);
 	}
-
-	@Override
-	public String getCommandId() {
-		return "MANAGE-WOL";
-	}
-
-	@Override
-	public Boolean executeOnAgent() {
-		return true;
-	}
-
+	
 	public void setResultFactory(ICommandResultFactory resultFactory) {
 		this.resultFactory = resultFactory;
 	}
@@ -53,9 +43,19 @@ public class ManageWolCommand implements ICommand {
 	public String getPluginVersion() {
 		return pluginInfo.getPluginVersion();
 	}
-
+	
 	public void setPluginInfo(PluginInfoImpl pluginInfoImpl) {
 		this.pluginInfo = pluginInfoImpl;
+	}
+
+	@Override
+	public String getCommandId() {
+		return "SHUT-DOWN-MACHINE";
+	}
+
+	@Override
+	public Boolean executeOnAgent() {
+		return true;
 	}
 
 }

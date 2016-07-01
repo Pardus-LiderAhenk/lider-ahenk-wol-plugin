@@ -11,20 +11,19 @@
 		update-strategy="reload">
 	</cm:property-placeholder>
 	
-	<!-- ICommand implementation is used to process a task execution -->
-  	<service ref="ManageWolCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
-  	<bean id="ManageWolCommand" 
-        class="tr.org.liderahenk.wol.commands.ManageWolCommand">
-        <property name="pluginInfo" ref="pluginInfoImpl" />
-        <property name="resultFactory" ref="resultFactory"/>
-  	</bean>
-  	
   	<service ref="WakeMachineCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
   	<bean id="WakeMachineCommand" 
         class="tr.org.liderahenk.wol.commands.WakeMachineCommand">
         <property name="pluginInfo" ref="pluginInfoImpl" />
         <property name="resultFactory" ref="resultFactory"/>
         <property name="agentDao" ref="agentDaoImpl"/>
+  	</bean>
+  	
+  	<service ref="ShutDownCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
+  	<bean id="ShutDownCommand" 
+        class="tr.org.liderahenk.wol.commands.ShutDownCommand">
+        <property name="pluginInfo" ref="pluginInfoImpl" />
+        <property name="resultFactory" ref="resultFactory"/>
   	</bean>
 	
 	<!-- IPluginInfo implementation is used to register plugin -->
@@ -43,6 +42,23 @@
 		<property name="usesFileTransfer" value="${plugin.uses.file.transfer}" />
 		<property name="xbased" value="${plugin.x.based}" />
 	</bean>
+	
+	<bean id="taskTemplate"
+		class="tr.org.liderahenk.wol.report.templates.WolReportTemplateImpl" />
+		
+		<bean id="templateManager" class="tr.org.liderahenk.wol.report.TemplateManager" init-method="init">
+		<property name="reportDao" ref="reportDao" />
+		<property name="entityFactory" ref="entityFactory" />
+		<property name="templateList" ref="templateList" />
+		<property name="taskTemplate" ref="taskTemplate" />
+	</bean>
+
+	<reference-list id="templateList" availability="optional"
+		interface="tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate" />
+	<reference id="reportDao"
+		interface="tr.org.liderahenk.lider.core.api.persistence.dao.IReportDao" />
+	<reference id="entityFactory"
+		interface="tr.org.liderahenk.lider.core.api.persistence.factories.IEntityFactory" />
 	
   	<reference id="resultFactory" 
   		interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>

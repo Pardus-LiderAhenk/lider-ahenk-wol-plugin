@@ -1,9 +1,15 @@
 package tr.org.liderahenk.wol.report.templates;
 
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate;
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplateColumn;
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplateParameter;
+import tr.org.liderahenk.lider.core.api.persistence.enums.ParameterType;
 import tr.org.liderahenk.lider.core.api.plugin.BaseReportTemplate;
 
 public class WolReportTemplateImpl extends BaseReportTemplate {
@@ -12,38 +18,212 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Wake-on-LAN";
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Uyandırılan ya da Kapatılan Bilgisayarlar Hakkında Detaylı Rapor";
 	}
 
 	@Override
 	public String getQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return "SELECT cer.responseMessage, t.createDate, p.name "
+				+ "FROM CommandImpl c LEFT JOIN c.commandExecutions ce INNER JOIN ce.commandExecutionResults cer INNER JOIN c.task t INNER JOIN t.plugin p "
+				+ "WHERE p.name = 'wol' AND t.commandClsId = 'WAKE-MACHINE' AND t.createDate BETWEEN :startDate AND :endDate";
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public Set<? extends IReportTemplateParameter> getTemplateParams() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<IReportTemplateParameter> params = new HashSet<IReportTemplateParameter>();
+		
+		params.add(new IReportTemplateParameter() {
+
+			@Override
+			public ParameterType getType() {
+				return ParameterType.DATE;
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getLabel() {
+				return "Başlangıç Tarihi";
+			}
+
+			@Override
+			public String getKey() {
+				return "startDate";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public String getDefaultValue() {
+				return null;
+			}
+
+			@Override
+			public boolean isMandatory() {
+				return true;
+			}
+
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+		});
+		params.add(new IReportTemplateParameter() {
+
+			@Override
+			public ParameterType getType() {
+				return ParameterType.DATE;
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getLabel() {
+				return "Bitiş Tarihi";
+			}
+
+			@Override
+			public String getKey() {
+				return "endDate";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public String getDefaultValue() {
+				return null;
+			}
+
+			@Override
+			public boolean isMandatory() {
+				return true;
+			}
+
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+		});
+		
+		return params;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public Set<? extends IReportTemplateColumn> getTemplateColumns() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<IReportTemplateColumn> columns = new HashSet<IReportTemplateColumn>();
+		columns.add(new IReportTemplateColumn() {
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getName() {
+				return "Sonuç";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public Integer getColumnOrder() {
+				return 1;
+			}
+		});
+		columns.add(new IReportTemplateColumn() {
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getName() {
+				return "Oluşturulma Tarihi";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public Integer getColumnOrder() {
+				return 1;
+			}
+		});
+		columns.add(new IReportTemplateColumn() {
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getName() {
+				return "Eklenti İsmi";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public Integer getColumnOrder() {
+				return 1;
+			}
+		});
+		return columns;
 	}
 
 	@Override
 	public String toJson() {
-		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
+	}
+	
+	protected WolReportTemplateImpl getSelf() {
+		return this;
 	}
 
 }
