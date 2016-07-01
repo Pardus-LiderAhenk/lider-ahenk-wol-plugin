@@ -47,13 +47,6 @@
 		<property name="xbased" value="${plugin.x.based}" />
 	</bean>
 	
-	<reference-list id="templateList" availability="optional"
-		interface="tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate" />
-	<reference id="reportDao"
-		interface="tr.org.liderahenk.lider.core.api.persistence.dao.IReportDao" />
-	<reference id="entityFactory"
-		interface="tr.org.liderahenk.lider.core.api.persistence.factories.IEntityFactory" />
-	
   	<reference id="resultFactory" 
   		interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>
   	<reference id="agentDaoImpl" 
