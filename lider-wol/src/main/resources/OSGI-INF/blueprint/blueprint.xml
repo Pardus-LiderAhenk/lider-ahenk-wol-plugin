@@ -6,6 +6,10 @@
                  http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
                  http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://svn.apache.org/repos/asf/aries/trunk/blueprint/blueprint-cm/src/main/resources/org/apache/aries/blueprint/compendium/cm/blueprint-cm-1.1.0.xsd
                  ">
+                 
+    <service ref="wolTemplate" interface="tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate" />
+	<bean id="wolTemplate"
+		class="tr.org.liderahenk.wol.report.templates.WolReportTemplateImpl" />
          
 	<cm:property-placeholder persistent-id="tr.org.liderahenk.wol"
 		update-strategy="reload">
@@ -43,16 +47,6 @@
 		<property name="xbased" value="${plugin.x.based}" />
 	</bean>
 	
-	<bean id="taskTemplate"
-		class="tr.org.liderahenk.wol.report.templates.WolReportTemplateImpl" />
-		
-		<bean id="templateManager" class="tr.org.liderahenk.wol.report.TemplateManager" init-method="init">
-		<property name="reportDao" ref="reportDao" />
-		<property name="entityFactory" ref="entityFactory" />
-		<property name="templateList" ref="templateList" />
-		<property name="taskTemplate" ref="taskTemplate" />
-	</bean>
-
 	<reference-list id="templateList" availability="optional"
 		interface="tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate" />
 	<reference id="reportDao"
