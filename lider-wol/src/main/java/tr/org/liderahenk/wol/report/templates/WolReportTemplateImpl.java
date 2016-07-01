@@ -211,17 +211,6 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 		return columns;
 	}
 
-	@Override
-	public String toJson() {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			return mapper.writeValueAsString(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	protected WolReportTemplateImpl getSelf() {
 		return this;
 	}
