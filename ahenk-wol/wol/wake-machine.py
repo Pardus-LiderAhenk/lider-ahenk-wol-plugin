@@ -19,6 +19,7 @@ class WakeMachine(AbstractPlugin):
         self.wake_command = 'wakeonlan {}'
         self.ip_address_list = self.task['ipAddress']
         self.port_list = self.task['port']
+        self.time_list = self.task['time']
         self.port_control = 'nmap -p {0} {1} | grep {2}/tcp'
 
         self.logger.debug('[Wol - Wake Machine] Parameters were initialized.')
@@ -31,33 +32,51 @@ class WakeMachine(AbstractPlugin):
 
             self.logger.debug('[Wol - Wake Machine] Sending magic package(s) to wake the machine(s)...')
 
+            result_list = []
+            is_open = None
+
             for i, val in enumerate(self.mac_address_list):
                 mac_addresses = str(val).split(',')
                 for j, mac in enumerate(mac_addresses):
+                    mac = mac.replace("'","")
                     result_code_wake, p_out_wake, p_err_wake = self.execute(self.wake_command.format(mac))
 
                     if p_err_wake != '':
-                        self.logger.debug('[Wol - Wake Machine] An error occured while sending magic package. Mac Address: {}'.format(val))
+                        self.logger.debug('[Wol - Wake Machine] An error occured while sending magic package. Mac Address: {}'.format(mac))
                         raise Exception(p_err_wake)
 
-            time.sleep(120)
+                time.sleep(int(self.time_list[i]))
 
-            for i, val in enumerate(self.ip_address_list):
-                ip_addresses = str(val).split(',')
+                is_open = False
+                ip_addresses = str(self.ip_address_list[i]).split(',')
+                ports = str(self.port_list[i]).split(',')
                 for j, ip in enumerate(ip_addresses):
-                    result_code, out, err = self.execute(self.port_control.format(self.port_list[i], ip, self.port_list[i]))
+                    for port in ports:
+                        result_code, out, err = self.execute(self.port_control.format(port, ip, port))
 
-                    if err != '':
-                        self.logger.debug('[Wol - Wake Machine] An error occured while scanning the port. Host: {}'.format(val))
-                        raise Exception(err)
+                        if err != '':
+                            self.logger.debug(
+                                '[Wol - Wake Machine] An error occured while scanning the port. Mac Address(es): {0}, Host: {1}, Port: {2}'.format(
+                                    val, ip, port))
 
-                    if 'open' not in out:
-                        self.logger.debug('[Wol - Wake Machine] Port is closed or the machine was not turned on. Host: {}'.format(val))
-                        raise Exception
+                        if 'open' in out:
+                            result = '[Wol - Wake Machine] Machine is awake. Mac Address(es): {0}, Host: {1}, Port: {2}'.format(
+                                val, ip, port)
+                            self.logger.debug(result)
+                            result_list.append(result)
+                            is_open = True
+
+                if is_open == False:
+                    result = '[Wol - Wake Machine] The machine is not awake or ip adresses are wrong ' \
+                             'or ports are close. Mac Address(es): {0}, Host(s): {1}, Port(s): {2}'.format(
+                        val, self.ip_address_list[i], self.port_list[i])
+                    self.logger.debug(result)
+                    result_list.append(result)
 
 
+            response = ' - '.join(result_list)
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
-                                         message='User wol task processed successfully')
+                                         message=response)
             self.logger.info('[Wol - Wake Machine] WOL task is handled successfully')
 
         except Exception as e:

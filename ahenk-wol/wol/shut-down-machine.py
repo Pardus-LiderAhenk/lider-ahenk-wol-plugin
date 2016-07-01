@@ -3,6 +3,7 @@
 # Author:Mine DOGAN <mine.dogan@agem.com.tr>
 
 from base.plugin.abstract_plugin import AbstractPlugin
+from base.system.system import System
 
 class ShutDownMachine(AbstractPlugin):
     def __init__(self, task, context):
@@ -25,8 +26,11 @@ class ShutDownMachine(AbstractPlugin):
                 self.logger.debug('[Wol - Shut Down Machine] An error occured while shutting down the machine.')
                 raise Exception(err)
 
+            response = 'The machine was turned off. Mac Address(es): {0}, Host(s): {1}'\
+                .format(System.Hardware.Network.mac_addresses(), System.Hardware.Network.ip_addresses())
+            
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
-                                         message='User wol task processed successfully')
+                                         message=response)
             self.logger.info('[Wol - Shut Down Machine] WOL task is handled successfully')
 
         except Exception as e:
