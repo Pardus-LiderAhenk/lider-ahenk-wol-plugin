@@ -7,12 +7,8 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -20,7 +16,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
@@ -41,6 +36,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	
 	private Text txtMacAddress;
 	private Text txtPorts;
+	private Text txtTime;
 	private Text txtIpAddress;
 	
 	private Button btnAdd;
@@ -52,6 +48,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	private List<String> macAddressList = new ArrayList<String>();
 	private List<String> ipAddressList = new ArrayList<String>();
 	private List<String> portList = new ArrayList<String>();
+	private List<String> timeList = new ArrayList<String>();
 	
 	public WakeMachineTaskDialog(Shell parentShell, String dn) {
 		super(parentShell, dn);
@@ -80,16 +77,6 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		lblMacAddresses.setText(Messages.getString("MAC_ADDRESS"));
 		
 		txtMacAddress = new Text(composite, SWT.BORDER);
-		txtMacAddress.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				Device device = Display.getCurrent();
-				Color black = new Color(device, 0, 0, 0);
-				txtMacAddress.setForeground(black);
-				txtMacAddress.redraw();
-			}
-		});
 		
 		Label lblControl = new Label(composite, SWT.NONE);
 		lblControl.setText(Messages.getString("CONTROL"));
@@ -103,31 +90,16 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		lblIpAddress.setText(Messages.getString("IP_ADDRESS"));
 		
 		txtIpAddress = new Text(composite, SWT.BORDER);
-		txtIpAddress.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				Device device = Display.getCurrent();
-				Color black = new Color(device, 0, 0, 0);
-				txtIpAddress.setForeground(black);
-				txtIpAddress.redraw();
-			}
-		});
 		
 		Label lblPorts = new Label(composite, SWT.NONE);
 		lblPorts.setText(Messages.getString("PORT"));
 		
 		txtPorts = new Text(composite, SWT.BORDER);
-		txtPorts.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				Device device = Display.getCurrent();
-				Color black = new Color(device, 0, 0, 0);
-				txtPorts.setForeground(black);
-				txtPorts.redraw();
-			}
-		});
+		
+		Label lblTime = new Label(composite, SWT.NONE);
+		lblTime.setText(Messages.getString("CONTROL_TIME"));
+		
+		txtTime = new Text(composite, SWT.BORDER);
 		
 		btnAdd = new Button(composite, SWT.PUSH);
 		btnAdd.setText(Messages.getString("ADD"));
@@ -143,10 +115,13 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 				ipAddressList.add(txtIpAddress.getText());
 				tblItem.setText(2, txtPorts.getText());
 				portList.add(txtPorts.getText());
+				tblItem.setText(3, txtTime.getText());
+				timeList.add(txtTime.getText());
 				
 				txtMacAddress.setText("");
 				txtIpAddress.setText("");
 				txtPorts.setText("");
+				txtTime.setText("");
 			}
 
 			@Override
@@ -178,6 +153,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 				macAddressList.remove(selectionIndex);
 				ipAddressList.remove(selectionIndex);
 				portList.remove(selectionIndex);
+				timeList.remove(selectionIndex);
 			}
 			
 			@Override
@@ -192,13 +168,14 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		SWTResourceManager.createTableViewerColumn(tblMachines, Messages.getString("MAC_COLUMN"), 120);
 		SWTResourceManager.createTableViewerColumn(tblMachines, Messages.getString("IP_COLUMN"), 120);
 		SWTResourceManager.createTableViewerColumn(tblMachines, Messages.getString("PORT_COLUMN"), 120);
+		SWTResourceManager.createTableViewerColumn(tblMachines, Messages.getString("TIME_COLUMN"), 120);
 	}
 
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
 		
 		if(macAddressList.contains("")) {
-			throw new ValidationException(Messages.getString("AT_LEAST_ONE_ITEM"));
+			throw new ValidationException(Messages.getString("REMOVE_ITEM_HAS_NO_MAC_ADDRESS"));
 		}
 		if(portList.contains("")) {
 			throw new ValidationException(Messages.getString("REMOVE_ITEM_HAS_NO_PORT"));
@@ -211,6 +188,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		parameterMap.put(WolConstants.PARAMETERS.MAC_ADDRESS, macAddressList);
 		parameterMap.put(WolConstants.PARAMETERS.PORT, portList);
 		parameterMap.put(WolConstants.PARAMETERS.IP_ADDRESS, ipAddressList);
+		parameterMap.put(WolConstants.PARAMETERS.TIME, timeList);
 		return parameterMap;
 	}
 

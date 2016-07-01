@@ -10,6 +10,7 @@ public class WolConstants {
 		public static final String MAC_ADDRESS = "macAddress";
 		public static final String PORT = "port";
 		public static final String IP_ADDRESS = "ipAddress";
+		public static final String TIME = "time";
 	}
 	
 }
