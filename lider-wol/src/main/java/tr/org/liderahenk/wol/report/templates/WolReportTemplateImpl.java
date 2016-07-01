@@ -30,7 +30,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 	public String getQuery() {
 		return "SELECT cer.responseMessage, t.createDate, p.name "
 				+ "FROM CommandImpl c LEFT JOIN c.commandExecutions ce INNER JOIN ce.commandExecutionResults cer INNER JOIN c.task t INNER JOIN t.plugin p "
-				+ "WHERE p.name = 'wol' AND t.commandClsId = 'WAKE-MACHINE' AND t.createDate BETWEEN :startDate AND :endDate";
+				+ "WHERE p.name = 'wol' AND (t.commandClsId = 'WAKE-MACHINE' OR t.commandClsId = 'SHUT-DOWN-MACHINE') AND t.createDate BETWEEN :startDate AND :endDate";
 	}
 
 	@SuppressWarnings("serial")
