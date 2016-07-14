@@ -13,15 +13,14 @@ class ShutDownMachine(AbstractPlugin):
         self.logger = self.get_logger()
         self.message_code = self.get_message_code()
 
-        self.waiting_time = self.task['time']
-        self.shut_down_command = 'sleep {0}s; shutdown -h now'
+        self.shut_down_command = 'sleep 5s; shutdown -h now'
 
         self.logger.debug('[Wol - Shut Down Machine] Parameters were initialized.')
 
     def handle_task(self):
         try:
             self.logger.debug('[Wol - Shut Down Machine] Shutting down the machine...')
-            self.execute(self.shut_down_command.format(self.waiting_time), result=False)
+            self.execute(self.shut_down_command, result=False)
 
             response = 'Shutdown command executed successfully. The machine will turn off. Mac Address(es): {0}, Ip Address(es): {1}'\
                 .format(System.Hardware.Network.mac_addresses(), System.Hardware.Network.ip_addresses())
