@@ -56,11 +56,11 @@ class WakeMachine(AbstractPlugin):
 
                         if err != '':
                             self.logger.debug(
-                                '[Wol - Wake Machine] An error occured while scanning the port. Mac Address(es): {0}, Host: {1}, Port: {2}'.format(
+                                '[Wol - Wake Machine] An error occured while scanning the port. Mac Address(es): {0}, Ip Address: {1}, Port: {2}'.format(
                                     val, ip, port))
 
                         if 'open' in out:
-                            result = '[Wol - Wake Machine] Machine is awake. Mac Address(es): {0}, Host: {1}, Port: {2}'.format(
+                            result = '[Wol - Wake Machine] Machine is awake. Mac Address(es): {0}, Ip Address: {1}, Port: {2}'.format(
                                 val, ip, port)
                             self.logger.debug(result)
                             result_list.append(result)
@@ -68,7 +68,7 @@ class WakeMachine(AbstractPlugin):
 
                 if is_open == False:
                     result = '[Wol - Wake Machine] The machine is not awake or ip adresses are wrong ' \
-                             'or ports are close. Mac Address(es): {0}, Host(s): {1}, Port(s): {2}'.format(
+                             'or ports are close. Mac Address(es): {0}, Ip Address(es): {1}, Port(s): {2}'.format(
                         val, self.ip_address_list[i], self.port_list[i])
                     self.logger.debug(result)
                     result_list.append(result)

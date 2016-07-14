@@ -13,20 +13,17 @@ class ShutDownMachine(AbstractPlugin):
         self.logger = self.get_logger()
         self.message_code = self.get_message_code()
 
-        self.shut_down_command = 'shutdown -h now'
+        self.waiting_time = self.task['time']
+        self.shut_down_command = 'sleep {0}s; shutdown -h now'
 
         self.logger.debug('[Wol - Shut Down Machine] Parameters were initialized.')
 
     def handle_task(self):
         try:
             self.logger.debug('[Wol - Shut Down Machine] Shutting down the machine...')
-            result_code, out, err = self.execute(self.shut_down_command)
+            self.execute(self.shut_down_command.format(self.waiting_time), result=False)
 
-            if err != '':
-                self.logger.debug('[Wol - Shut Down Machine] An error occured while shutting down the machine.')
-                raise Exception(err)
-
-            response = 'The machine was turned off. Mac Address(es): {0}, Host(s): {1}'\
+            response = 'Shutdown command executed successfully. The machine will turn off. Mac Address(es): {0}, Ip Address(es): {1}'\
                 .format(System.Hardware.Network.mac_addresses(), System.Hardware.Network.ip_addresses())
             
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
