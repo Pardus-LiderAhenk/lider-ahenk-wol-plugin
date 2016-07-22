@@ -65,45 +65,67 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		
-		Label lblMac = new Label(composite, SWT.NONE);
+		GridData gdMac =  new GridData();
+		gdMac.horizontalAlignment = SWT.FILL;
+		gdMac.verticalAlignment = SWT.TOP;
+		gdMac.grabExcessHorizontalSpace = true;
+		
+		Composite compMac = new Composite(composite, SWT.NONE);
+		compMac.setLayout(new GridLayout(1, false));
+		compMac.setLayoutData(gdMac);
+		
+		Label lblMac = new Label(compMac, SWT.NONE);
 		lblMac.setText(Messages.getString("MAC"));
-		lblMac.setLayoutData(new GridData(1, 1, false, false, 2, 2));
+		lblMac.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
 		FontData data = lblMac.getFont().getFontData()[0];
-		Font font = new Font(composite.getDisplay(), new FontData(data.getName(), data
+		Font font = new Font(compMac.getDisplay(), new FontData(data.getName(), data
 		    .getHeight(), SWT.BOLD));
 		lblMac.setFont(font);
 		
-		Label lblMacAddresses = new Label(composite, SWT.NONE);
+		Label lblMacAddresses = new Label(compMac, SWT.NONE);
 		lblMacAddresses.setText(Messages.getString("MAC_ADDRESS"));
 		
-		txtMacAddress = new Text(composite, SWT.BORDER);
+		txtMacAddress = new Text(compMac, SWT.BORDER);
+        txtMacAddress.setLayoutData(gdMac);
+        
+        GridData gdControl =  new GridData();
+		gdControl.horizontalAlignment = SWT.FILL;
+		gdControl.verticalAlignment = SWT.TOP;
+		gdControl.grabExcessHorizontalSpace = true;
+        
+        Composite compControl = new Composite(composite, SWT.NONE);
+        compControl.setLayout(new GridLayout(1, false));
+        compControl.setLayoutData(gdControl);
 		
-		Label lblControl = new Label(composite, SWT.NONE);
+		Label lblControl = new Label(compControl, SWT.NONE);
 		lblControl.setText(Messages.getString("CONTROL"));
-		lblControl.setLayoutData(new GridData(1, 1, false, false, 2, 2));
+		lblControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
 		data = lblControl.getFont().getFontData()[0];
-		font = new Font(composite.getDisplay(), new FontData(data.getName(), data
+		font = new Font(compControl.getDisplay(), new FontData(data.getName(), data
 		    .getHeight(), SWT.BOLD));
 		lblControl.setFont(font);
 		
-		Label lblIpAddress = new Label(composite, SWT.NONE);
+		Label lblIpAddress = new Label(compControl, SWT.NONE);
 		lblIpAddress.setText(Messages.getString("IP_ADDRESS"));
 		
-		txtIpAddress = new Text(composite, SWT.BORDER);
+		txtIpAddress = new Text(compControl, SWT.BORDER);
+		txtIpAddress.setLayoutData(gdControl);
 		
-		Label lblPorts = new Label(composite, SWT.NONE);
+		Label lblPorts = new Label(compControl, SWT.NONE);
 		lblPorts.setText(Messages.getString("PORT"));
 		
-		txtPorts = new Text(composite, SWT.BORDER);
+		txtPorts = new Text(compControl, SWT.BORDER);
+		txtPorts.setLayoutData(gdControl);
 		
-		Label lblTime = new Label(composite, SWT.NONE);
+		Label lblTime = new Label(compControl, SWT.NONE);
 		lblTime.setText(Messages.getString("CONTROL_TIME"));
 		
-		txtTime = new Text(composite, SWT.BORDER);
+		txtTime = new Text(compControl, SWT.BORDER);
+		txtTime.setLayoutData(gdControl);
 		
 		btnAdd = new Button(composite, SWT.PUSH);
 		btnAdd.setText(Messages.getString("ADD"));
-		btnAdd.setLayoutData(new GridData(1, 1, false, false, 2, 2));
+		btnAdd.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 2, 2));
 		btnAdd.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -132,17 +154,25 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		
 		Label lblMachines = new Label(composite, SWT.NONE);
 		lblMachines.setText(Messages.getString("MACHINES"));
+		lblMachines.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
 		data = lblMachines.getFont().getFontData()[0];
 		font = new Font(composite.getDisplay(), new FontData(data.getName(), data
 		    .getHeight(), SWT.BOLD));
 		lblMachines.setFont(font);
 		
 		tblMachines = SWTResourceManager.createTableViewer(composite);
+		GridData gridData = new GridData();
+	    gridData.widthHint = 500;
+	    gridData.heightHint = 300;
+	    gridData.horizontalSpan = 2;
+	    gridData.verticalSpan = 2;
+	    tblMachines.getTable().setLayoutData(gridData);
 		tblMachines.getTable().setLinesVisible(true);
 		createColumns();
 		
 		btnRemoveItem = new Button(composite, SWT.PUSH);
 		btnRemoveItem.setText(Messages.getString("REMOVE_ITEM"));
+		btnRemoveItem.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 2, 2));
 		btnRemoveItem.addSelectionListener(new SelectionListener() {
 			
 			@Override
