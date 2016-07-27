@@ -81,7 +81,7 @@ class WakeMachine(AbstractPlugin):
         except Exception as e:
             self.logger.error('[Wol - Wake Machine] A problem occured while handling WOL task: {0}'.format(str(e)))
             self.context.create_response(code=self.message_code.TASK_ERROR.value,
-                                         message='A problem occured while handling WOL task: {0}'.format(str(e)))
+                                         message='WOL görevi uygulanırken bir hata oluştu.')
 
 
 def handle_task(task, context):
