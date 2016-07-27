@@ -60,18 +60,17 @@ class WakeMachine(AbstractPlugin):
                                     val, ip, port))
 
                         if 'open' in out:
-                            result = '[Wol - Wake Machine] Machine is awake. Mac Address(es): {0}, Ip Address: {1}, Port: {2}'.format(
-                                val, ip, port)
-                            self.logger.debug(result)
-                            result_list.append(result)
+                            self.logger.debug('[Wol - Wake Machine] Machine is awake. Mac Address(es): {0}, Ip Address: {1}, Port: {2}'.format(
+                                    val, ip, port))
+                            result_list.append('Bilgisayar açık. Mac Adres(ler)i: {0}, Ip Adres(ler)i: {1}, Port: {2}'.format(
+                                    val, ip, port))
                             is_open = True
 
                 if is_open == False:
-                    result = '[Wol - Wake Machine] The machine is not awake or ip adresses are wrong ' \
-                             'or ports are close. Mac Address(es): {0}, Ip Address(es): {1}, Port(s): {2}'.format(
-                        val, self.ip_address_list[i], self.port_list[i])
-                    self.logger.debug(result)
-                    result_list.append(result)
+                    self.logger.debug('[Wol - Wake Machine] The machine is not awake or ip adresses are wrong ' \
+                                      'or ports are close. Mac Address(es): {0}, Ip Address(es): {1}, Port(s): {2}'.format(val, self.ip_address_list[i], self.port_list[i]))
+                    result_list.append('Bilgisayar açık değil, belirtilen ip adresleri yanlış ya da ' \
+                                       'portlar kapalı. Mac Adres(ler)i: {0}, Ip Adres(ler)i: {1}, Port(lar): {2}'.format(val, self.ip_address_list[i], self.port_list[i]))
 
 
             response = ' - '.join(result_list)

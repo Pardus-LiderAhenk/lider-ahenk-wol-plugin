@@ -22,7 +22,7 @@ class ShutDownMachine(AbstractPlugin):
             self.logger.debug('[Wol - Shut Down Machine] Shutting down the machine...')
             self.execute(self.shut_down_command, result=False)
 
-            response = 'Shutdown command executed successfully. The machine will turn off. Mac Address(es): {0}, Ip Address(es): {1}'\
+            response = 'Shutdown komutu başarıyla çalıştırıldı. Bilgisayar kapatılacak. Mac Adres(ler)i: {0}, Ip Adres(ler)i: {1}'\
                 .format(System.Hardware.Network.mac_addresses(), System.Hardware.Network.ip_addresses())
             
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
@@ -32,7 +32,7 @@ class ShutDownMachine(AbstractPlugin):
         except Exception as e:
             self.logger.error('[Wol - Shut Down Machine] A problem occured while handling WOL task: {0}'.format(str(e)))
             self.context.create_response(code=self.message_code.TASK_ERROR.value,
-                                     message='A problem occured while handling WOL task: {0}'.format(str(e)))
+                                     message='WOL görevi uygulanırken bir hata oluştu: {0}'.format(str(e)))
 
 def handle_task(task, context):
     shut_down = ShutDownMachine(task, context)
