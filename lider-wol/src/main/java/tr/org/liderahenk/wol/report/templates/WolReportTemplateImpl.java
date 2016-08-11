@@ -1,10 +1,10 @@
 package tr.org.liderahenk.wol.report.templates;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.codehaus.jackson.map.ObjectMapper;
 
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplate;
 import tr.org.liderahenk.lider.core.api.persistence.entities.IReportTemplateColumn;
@@ -23,13 +23,13 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 	@Override
 	public String getDescription() {
-		return "Uyandırılan ya da Kapatılan Bilgisayarlar Hakkında Detaylı Rapor";
+		return "Uyandırılan ya da kapatılan bilgisayarlar hakkında detaylı rapor";
 	}
 
 	@Override
 	public String getQuery() {
-		return "SELECT cer.responseMessage, t.createDate, p.name "
-				+ "FROM CommandImpl c LEFT JOIN c.commandExecutions ce INNER JOIN ce.commandExecutionResults cer INNER JOIN c.task t INNER JOIN t.plugin p "
+		return "SELECT ce.dn, cer.responseMessage, t.createDate "
+				+ "FROM CommandImpl c LEFT JOIN c.commandExecutions ce INNER JOIN ce.commandExecutionResults cer INNER JOIN c.task t INNER JOIN t.plugin p  "
 				+ "WHERE p.name = 'wol' AND (t.commandClsId = 'WAKE-MACHINE' OR t.commandClsId = 'SHUT-DOWN-MACHINE') AND t.createDate BETWEEN :startDate AND :endDate";
 	}
 
@@ -37,7 +37,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 	@Override
 	public Set<? extends IReportTemplateParameter> getTemplateParams() {
 		Set<IReportTemplateParameter> params = new HashSet<IReportTemplateParameter>();
-		
+
 		params.add(new IReportTemplateParameter() {
 
 			@Override
@@ -67,7 +67,11 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 			@Override
 			public String getDefaultValue() {
-				return null;
+				Calendar prevYear = Calendar.getInstance();
+				prevYear.setTime(new Date());
+				prevYear.add(Calendar.DAY_OF_YEAR, -1);
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				return format.format(prevYear.getTime());
 			}
 
 			@Override
@@ -109,7 +113,8 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 			@Override
 			public String getDefaultValue() {
-				return null;
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				return format.format(new Date());
 			}
 
 			@Override
@@ -122,7 +127,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 				return new Date();
 			}
 		});
-		
+
 		return params;
 	}
 
@@ -130,6 +135,32 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 	@Override
 	public Set<? extends IReportTemplateColumn> getTemplateColumns() {
 		Set<IReportTemplateColumn> columns = new HashSet<IReportTemplateColumn>();
+		columns.add(new IReportTemplateColumn() {
+			@Override
+			public Date getCreateDate() {
+				return new Date();
+			}
+
+			@Override
+			public IReportTemplate getTemplate() {
+				return getSelf();
+			}
+
+			@Override
+			public String getName() {
+				return "Ahenk DN";
+			}
+
+			@Override
+			public Long getId() {
+				return null;
+			}
+
+			@Override
+			public Integer getColumnOrder() {
+				return 1;
+			}
+		});
 		columns.add(new IReportTemplateColumn() {
 			@Override
 			public Date getCreateDate() {
@@ -153,7 +184,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 			@Override
 			public Integer getColumnOrder() {
-				return 1;
+				return 2;
 			}
 		});
 		columns.add(new IReportTemplateColumn() {
@@ -169,7 +200,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 			@Override
 			public String getName() {
-				return "Oluşturulma Tarihi";
+				return "İşlem Tarihi";
 			}
 
 			@Override
@@ -179,33 +210,7 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 
 			@Override
 			public Integer getColumnOrder() {
-				return 1;
-			}
-		});
-		columns.add(new IReportTemplateColumn() {
-			@Override
-			public Date getCreateDate() {
-				return new Date();
-			}
-
-			@Override
-			public IReportTemplate getTemplate() {
-				return getSelf();
-			}
-
-			@Override
-			public String getName() {
-				return "Eklenti İsmi";
-			}
-
-			@Override
-			public Long getId() {
-				return null;
-			}
-
-			@Override
-			public Integer getColumnOrder() {
-				return 1;
+				return 3;
 			}
 		});
 		return columns;
