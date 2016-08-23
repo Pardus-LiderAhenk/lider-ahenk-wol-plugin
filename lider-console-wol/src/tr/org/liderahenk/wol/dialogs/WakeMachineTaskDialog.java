@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
 import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
 import tr.org.liderahenk.liderconsole.core.utils.SWTResourceManager;
+import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
 import tr.org.liderahenk.wol.constants.WolConstants;
 import tr.org.liderahenk.wol.i18n.Messages;
 
@@ -122,6 +123,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		
 		txtTime = new Text(compControl, SWT.BORDER);
 		txtTime.setLayoutData(gdControl);
+		txtTime.setText("30");
 		
 		btnAdd = new Button(composite, SWT.PUSH);
 		btnAdd.setText(Messages.getString("ADD"));
@@ -130,20 +132,29 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tblItem = new TableItem(tblMachines.getTable(), SWT.NONE);
-				tblItem.setText(0, txtMacAddress.getText());
-				macAddressList.add(txtMacAddress.getText());
-				tblItem.setText(1, txtIpAddress.getText());
-				ipAddressList.add(txtIpAddress.getText());
-				tblItem.setText(2, txtPorts.getText());
-				portList.add(txtPorts.getText());
-				tblItem.setText(3, txtTime.getText());
-				timeList.add(txtTime.getText());
-				
-				txtMacAddress.setText("");
-				txtIpAddress.setText("");
-				txtPorts.setText("");
-				txtTime.setText("");
+				if (txtMacAddress.getText() != null && !txtMacAddress.getText().isEmpty() &&
+						!txtMacAddress.getText().replaceAll("\\s+","").isEmpty() && txtPorts.getText() != null &&
+						!txtPorts.getText().isEmpty() && !txtPorts.getText().replaceAll("\\s+","").isEmpty() && 
+						txtTime.getText() != null && !txtTime.getText().isEmpty() && 
+						!txtTime.getText().replaceAll("\\s+","").isEmpty()) {
+					tblItem = new TableItem(tblMachines.getTable(), SWT.NONE);
+					tblItem.setText(0, txtMacAddress.getText());
+					macAddressList.add(txtMacAddress.getText());
+					tblItem.setText(1, txtIpAddress.getText());
+					ipAddressList.add(txtIpAddress.getText());
+					tblItem.setText(2, txtPorts.getText());
+					portList.add(txtPorts.getText());
+					tblItem.setText(3, txtTime.getText());
+					timeList.add(txtTime.getText());
+					
+					txtMacAddress.setText("");
+					txtIpAddress.setText("");
+					txtPorts.setText("");
+					txtTime.setText("30");
+				}
+				else {
+					Notifier.warning(null, Messages.getString("FILL_MAC_ADDRESS_PORTS_AND_TIME"));
+				}
 			}
 
 			@Override
@@ -203,13 +214,6 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
-		
-		if(macAddressList.contains("")) {
-			throw new ValidationException(Messages.getString("REMOVE_ITEM_HAS_NO_MAC_ADDRESS"));
-		}
-		if(portList.contains("")) {
-			throw new ValidationException(Messages.getString("REMOVE_ITEM_HAS_NO_PORT"));
-		}
 	}
 
 	@Override
