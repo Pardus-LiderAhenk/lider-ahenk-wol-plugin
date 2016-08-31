@@ -3,7 +3,6 @@
 # Author:Mine DOGAN <mine.dogan@agem.com.tr>
 
 from base.plugin.abstract_plugin import AbstractPlugin
-from base.system.system import System
 
 class ShutDownMachine(AbstractPlugin):
     def __init__(self, task, context):
@@ -23,7 +22,7 @@ class ShutDownMachine(AbstractPlugin):
             self.execute(self.shut_down_command, result=False)
 
             response = 'Shutdown komutu başarıyla çalıştırıldı. Bilgisayar kapatılacak. Mac Adres(ler)i: {0}, Ip Adres(ler)i: {1}'\
-                .format(System.Hardware.Network.mac_addresses(), System.Hardware.Network.ip_addresses())
+                .format(self.Hardware.Network.mac_addresses(), self.Hardware.Network.ip_addresses())
             
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
                                          message=response)

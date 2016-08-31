@@ -220,4 +220,9 @@ public class WolReportTemplateImpl extends BaseReportTemplate {
 		return this;
 	}
 
+	@Override
+	public String getCode() {
+		return "WOL-REPORT";
+	}
+
 }
