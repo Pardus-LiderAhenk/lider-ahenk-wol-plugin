@@ -1,6 +1,7 @@
 package tr.org.liderahenk.wol.dialogs;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -19,8 +20,8 @@ import tr.org.liderahenk.wol.i18n.Messages;
  */
 public class ShutDownTaskDialog extends DefaultTaskDialog {
 	
-	public ShutDownTaskDialog(Shell parentShell, String dn) {
-		super(parentShell, dn);
+	public ShutDownTaskDialog(Shell parentShell, Set<String> dnSet) {
+		super(parentShell, dnSet);
 	}
 
 	@Override
