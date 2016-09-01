@@ -57,11 +57,14 @@ public class WakeMachineCommand implements ICommand {
 						String ipAddresses = agent.getIpAddresses().replace("'", "");
 						ipAddressesBelongOneMachine.add(ipAddresses);
 					}
+					String ipAdressesStr = StringUtils.join(ipAddressesBelongOneMachine.toArray(), ",");
+					ipAddressesBelongOneMachine.clear();
+					newIpAddresses.add(ipAdressesStr);
+				}
+				else {
+					newIpAddresses.add(ip[j]);
 				}
 			}
-			String ipAdressesStr = StringUtils.join(ipAddressesBelongOneMachine.toArray(), ",");
-			ipAddressesBelongOneMachine.clear();
-			newIpAddresses.add(ipAdressesStr);
 		}
 		if(!(newIpAddresses.isEmpty())) {
 			parameterMap.put("ipAddress", newIpAddresses);
