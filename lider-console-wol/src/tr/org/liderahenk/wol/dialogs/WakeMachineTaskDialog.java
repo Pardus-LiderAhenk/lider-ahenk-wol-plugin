@@ -214,6 +214,9 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
+		if (macAddressList.isEmpty() || portList.isEmpty() || timeList.isEmpty()) {
+			throw new ValidationException(Messages.getString("ADD_ITEM"));
+		}
 	}
 
 	@Override
