@@ -20,7 +20,6 @@
         class="tr.org.liderahenk.wol.commands.WakeMachineCommand">
         <property name="pluginInfo" ref="pluginInfoImpl" />
         <property name="resultFactory" ref="resultFactory"/>
-        <property name="agentDao" ref="agentDaoImpl"/>
   	</bean>
   	
   	<service ref="ShutDownCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
@@ -28,6 +27,14 @@
         class="tr.org.liderahenk.wol.commands.ShutDownCommand">
         <property name="pluginInfo" ref="pluginInfoImpl" />
         <property name="resultFactory" ref="resultFactory"/>
+  	</bean>
+  	
+  	<service ref="WakeAhenksCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
+  	<bean id="WakeAhenksCommand" 
+        class="tr.org.liderahenk.wol.commands.WakeAhenksCommand">
+        <property name="pluginInfo" ref="pluginInfoImpl" />
+        <property name="resultFactory" ref="resultFactory"/>
+        <property name="agentDao" ref="agentDaoImpl"/>
   	</bean>
 	
 	<!-- IPluginInfo implementation is used to register plugin -->
