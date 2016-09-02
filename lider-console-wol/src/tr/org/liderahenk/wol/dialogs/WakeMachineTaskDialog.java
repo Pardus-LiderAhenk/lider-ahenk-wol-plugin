@@ -11,11 +11,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
@@ -35,6 +37,10 @@ import tr.org.liderahenk.wol.i18n.Messages;
  */
 public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	
+	private Label lblIpAddress;
+	private Label lblPorts;
+	private Label lblTime;
+	
 	private Text txtMacAddress;
 	private Text txtPorts;
 	private Text txtTime;
@@ -42,6 +48,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	
 	private Button btnAdd;
 	private Button btnRemoveItem;
+	private Button btnCheck;
 	
 	private TableViewer tblMachines;
 	private TableItem tblItem;
@@ -64,7 +71,17 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 	public Control createTaskDialogArea(Composite parent) {
 		
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(1, false));
+		
+		Composite compWarning = new Composite(composite, SWT.NONE);
+		compWarning.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		compWarning.setLayout(new GridLayout(2, false));
+		
+		Label image = new Label(compWarning, SWT.NONE);
+		image.setImage(new Image(Display.getCurrent(), this.getClass().getResourceAsStream("/icons/32/warning.png")));
+		
+		Label lblAddMachine = new Label(compWarning, SWT.NONE);
+		lblAddMachine.setText(Messages.getString("ADD_MACHINE_TO_LIST"));
 		
 		GridData gdMac =  new GridData();
 		gdMac.horizontalAlignment = SWT.FILL;
@@ -95,35 +112,56 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 		gdControl.grabExcessHorizontalSpace = true;
         
         Composite compControl = new Composite(composite, SWT.NONE);
-        compControl.setLayout(new GridLayout(1, false));
+        compControl.setLayout(new GridLayout(2, false));
         compControl.setLayoutData(gdControl);
 		
-		Label lblControl = new Label(compControl, SWT.NONE);
-		lblControl.setText(Messages.getString("CONTROL"));
-		lblControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
-		data = lblControl.getFont().getFontData()[0];
+        btnCheck = new Button(compControl, SWT.CHECK);
+		btnCheck.setText(Messages.getString("CONTROL"));
+		btnCheck.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		data = btnCheck.getFont().getFontData()[0];
 		font = new Font(compControl.getDisplay(), new FontData(data.getName(), data
 		    .getHeight(), SWT.BOLD));
-		lblControl.setFont(font);
+		btnCheck.setFont(font);
+		btnCheck.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				lblIpAddress.setEnabled(btnCheck.getSelection());
+				txtIpAddress.setEnabled(btnCheck.getSelection());
+				lblPorts.setEnabled(btnCheck.getSelection());
+				txtPorts.setEnabled(btnCheck.getSelection());
+				lblTime.setEnabled(btnCheck.getSelection());
+				txtTime.setEnabled(btnCheck.getSelection());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		
-		Label lblIpAddress = new Label(compControl, SWT.NONE);
+		lblIpAddress = new Label(compControl, SWT.NONE);
 		lblIpAddress.setText(Messages.getString("IP_ADDRESS"));
+		lblIpAddress.setEnabled(false);
 		
 		txtIpAddress = new Text(compControl, SWT.BORDER);
 		txtIpAddress.setLayoutData(gdControl);
+		txtIpAddress.setEnabled(false);
 		
-		Label lblPorts = new Label(compControl, SWT.NONE);
+		lblPorts = new Label(compControl, SWT.NONE);
 		lblPorts.setText(Messages.getString("PORT"));
+		lblPorts.setEnabled(false);
 		
 		txtPorts = new Text(compControl, SWT.BORDER);
 		txtPorts.setLayoutData(gdControl);
+		txtPorts.setEnabled(false);
 		
-		Label lblTime = new Label(compControl, SWT.NONE);
+		lblTime = new Label(compControl, SWT.NONE);
 		lblTime.setText(Messages.getString("CONTROL_TIME"));
+		lblTime.setEnabled(false);
 		
 		txtTime = new Text(compControl, SWT.BORDER);
 		txtTime.setLayoutData(gdControl);
 		txtTime.setText("30");
+		txtTime.setEnabled(false);
 		
 		btnAdd = new Button(composite, SWT.PUSH);
 		btnAdd.setText(Messages.getString("ADD"));
@@ -133,27 +171,48 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (txtMacAddress.getText() != null && !txtMacAddress.getText().isEmpty() &&
-						!txtMacAddress.getText().replaceAll("\\s+","").isEmpty() && txtPorts.getText() != null &&
-						!txtPorts.getText().isEmpty() && !txtPorts.getText().replaceAll("\\s+","").isEmpty() && 
-						txtTime.getText() != null && !txtTime.getText().isEmpty() && 
-						!txtTime.getText().replaceAll("\\s+","").isEmpty()) {
-					tblItem = new TableItem(tblMachines.getTable(), SWT.NONE);
-					tblItem.setText(0, txtMacAddress.getText());
-					macAddressList.add(txtMacAddress.getText());
-					tblItem.setText(1, txtIpAddress.getText());
-					ipAddressList.add(txtIpAddress.getText());
-					tblItem.setText(2, txtPorts.getText());
-					portList.add(txtPorts.getText());
-					tblItem.setText(3, txtTime.getText());
-					timeList.add(txtTime.getText());
+						!txtMacAddress.getText().replaceAll("\\s+","").isEmpty()) {
 					
-					txtMacAddress.setText("");
-					txtIpAddress.setText("");
-					txtPorts.setText("");
-					txtTime.setText("30");
+					if (btnCheck.getSelection() == false) {
+						tblItem = new TableItem(tblMachines.getTable(), SWT.NONE);
+						tblItem.setText(0, txtMacAddress.getText());
+						macAddressList.add(txtMacAddress.getText());
+						ipAddressList.add("");
+						portList.add("");
+						timeList.add("");
+						
+						txtMacAddress.setText("");
+					}
+					else {
+						if (txtIpAddress.getText() != null && !txtIpAddress.getText().isEmpty() && 
+								!txtIpAddress.getText().replaceAll("\\s+","").isEmpty() && txtPorts.getText() != null &&
+								!txtPorts.getText().isEmpty() && !txtPorts.getText().replaceAll("\\s+","").isEmpty() && 
+								txtTime.getText() != null && !txtTime.getText().isEmpty() && 
+								!txtTime.getText().replaceAll("\\s+","").isEmpty()) {
+							
+							tblItem = new TableItem(tblMachines.getTable(), SWT.NONE);
+							tblItem.setText(0, txtMacAddress.getText());
+							macAddressList.add(txtMacAddress.getText());
+							tblItem.setText(1, txtIpAddress.getText());
+							ipAddressList.add(txtIpAddress.getText());
+							tblItem.setText(2, txtPorts.getText());
+							portList.add(txtPorts.getText());
+							tblItem.setText(3, txtTime.getText());
+							timeList.add(txtTime.getText());
+							
+							txtMacAddress.setText("");
+							txtIpAddress.setText("");
+							txtPorts.setText("");
+							txtTime.setText("30");
+						}
+						else {
+							Notifier.warning(null, Messages.getString("FILL_IP_ADDRESS_PORTS_TIME"));
+						}
+						
+					}
 				}
 				else {
-					Notifier.warning(null, Messages.getString("FILL_MAC_ADDRESS_PORTS_AND_TIME"));
+					Notifier.warning(null, Messages.getString("FILL_MAC_ADDRESS"));
 				}
 			}
 
@@ -214,7 +273,7 @@ public class WakeMachineTaskDialog extends DefaultTaskDialog {
 
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
-		if (macAddressList.isEmpty() || portList.isEmpty() || timeList.isEmpty()) {
+		if (macAddressList.isEmpty()) {
 			throw new ValidationException(Messages.getString("ADD_ITEM"));
 		}
 	}
