@@ -11,14 +11,13 @@ class Shutdown(AbstractPlugin):
         self.context = context
         self.logger = self.get_logger()
 
-        self.logger.debug('[WOL - shutdown] Parameters were initialized.')
+        self.logger.debug('Parameters were initialized.')
 
     def handle_shutdown_mode(self):
-
         for interface in self.Hardware.Network.interfaces():
-            self.logger.debug('[WOL - shutdown] Activating magic packet for ' + str(interface))
+            self.logger.debug('Activating magic packet for ' + str(interface))
             self.execute('ethtool -s ' + str(interface) + ' wol g')
-            self.logger.debug('[WOL - shutdown] Activated magic packet for ' + str(interface))
+            self.logger.debug('Activated magic packet for ' + str(interface))
 
 
 def handle_mode(context):

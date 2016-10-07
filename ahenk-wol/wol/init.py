@@ -11,18 +11,18 @@ class Init(AbstractPlugin):
         self.context = context
         self.logger = self.get_logger()
 
-        self.logger.debug('[WOL - init] Parameters were initialized.')
+        self.logger.debug('Parameters were initialized.')
 
     def handle_init_mode(self):
 
-        if self.is_installed('wakeonlan') == False:
-            self.logger.debug('[WOL-INIT] Installing wakeonlan with apt-get...')
+        if self.is_installed('wakeonlan') is False:
+            self.logger.debug('Installing wakeonlan with apt-get...')
             self.install_with_apt_get('wakeonlan')
 
         for interface in self.Hardware.Network.interfaces():
-            self.logger.debug('[WOL-INIT] Activating magic packet for ' + str(interface))
+            self.logger.debug('Activating magic packet for ' + str(interface))
             self.execute('ethtool -s ' + str(interface) + ' wol g')
-            self.logger.debug('[WOL-INIT] Activated magic packet for ' + str(interface))
+            self.logger.debug('Activated magic packet for ' + str(interface))
 
 
 def handle_mode(context):
