@@ -5,7 +5,7 @@
 def info():
     inf = dict()
     inf['name'] = 'wol'
-    inf['version'] = '1.0.0'
+    inf['version'] = '1.0.0-alfa'
     inf['support'] = 'debian'
     inf['description'] = 'Wake-on-LAN plugin provides to waking up and shutting down machines.'
     inf['task'] = True
