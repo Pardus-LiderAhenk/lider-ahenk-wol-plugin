@@ -163,5 +163,22 @@
   		<task code="SHUT-DOWN-MACHINE" label="%command.shutdown.task" />
 		<plugin name="wol" label="%plugin.label" />
   	</extension>
+  	
+  	<extension
+  		point="tr.org.liderahenk.liderconsole.core.taskmenu">
+  		<taskItem label="%command.shutdown.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.ShutDownTask" />
+  	</extension>
+  
+  	<extension
+  		point="tr.org.liderahenk.liderconsole.core.taskmenu">
+  		<taskItem label="%command.wake.ahenks.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeAhenksTask" />
+  	</extension>
+  	
+  	<extension
+  		point="tr.org.liderahenk.liderconsole.core.taskmenu">
+  		<taskItem label="%command.wake.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask" />
+  	</extension>
+  
+  	
   
 </plugin>
