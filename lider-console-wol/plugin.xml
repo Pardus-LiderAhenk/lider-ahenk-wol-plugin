@@ -166,17 +166,17 @@
   	
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
-  		<taskItem label="%command.shutdown.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.ShutDownTask" />
+  		<taskItem label="%command.shutdown.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.ShutDownTask" selectionType="multi" description="Ahenk makinesi/lerini kapatmak için tılayınız.."/>
   	</extension>
   
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
-  		<taskItem label="%command.wake.ahenks.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeAhenksTask" />
+  		<taskItem label="%command.wake.ahenks.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeAhenksTask" selectionType="multi" description="Seçili ahenk makine/leri uyandırmak için kullanılan eklantidir.&#xA;Makine/leri uyandırmak için tıklayınız.. "/>
   	</extension>
   	
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
-  		<taskItem label="%command.wake.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask" />
+  		<taskItem label="%command.wake.task" pluginName="wol" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask" description="Bir makineyi ya da makineleri uyandırmak için eklentinin kurulu olduğu çevrimiçi herhangi bir Ahenk makinesi üzerinden uyandırma komutu gönderilir.&#xA;Makine uyandırmak için tıklayınız.."/>
   	</extension>
   
   	
