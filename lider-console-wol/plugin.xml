@@ -181,7 +181,7 @@
   		pluginVersion="1.0.0" 
   		taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeAhenksTask" 
   		selectionType="multi" description="Seçili ahenk makine/leri uyandırmak için kullanılan eklentidir.&#xA;Makine/leri uyandırmak için tıklayınız.. "
-  		imagePath="start.png"/>
+  		imagePath="wol.png"/>
   	</extension>
   	
   	<extension
@@ -190,7 +190,7 @@
   		pluginVersion="1.0.0" 
   		taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask" 
   		description="Bir makineyi ya da makineleri uyandırmak için eklentinin kurulu olduğu çevrimiçi herhangi bir Ahenk makinesi üzerinden uyandırma komutu gönderilir.&#xA;Makine uyandırmak için tıklayınız.."
-  		imagePath="start.png"/>
+  		imagePath="wol.png"/>
   	</extension>
   
   	
