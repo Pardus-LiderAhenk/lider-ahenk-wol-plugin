@@ -4,7 +4,7 @@ public class WolConstants {
 	
 	public static final String PLUGIN_NAME = "wol";
 	
-	public static final String PLUGIN_VERSION = "1.0.0";
+	public static final String PLUGIN_VERSION = "1.1";
 	
 	public static final class PARAMETERS {
 		public static final String MAC_ADDRESS = "macAddress";

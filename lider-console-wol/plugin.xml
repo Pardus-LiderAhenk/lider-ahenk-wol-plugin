@@ -169,7 +169,7 @@
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
   		<taskItem label="%command.shutdown.task" pluginName="wol" 
-  		pluginVersion="1.0.0" 
+  		pluginVersion="1.1" 
   		taskCommandId="tr.org.liderahenk.liderconsole.commands.ShutDownTask" selectionType="multi" 
   		description="Ahenk makinesi/lerini kapatmak için tılayınız.."
   		imagePath="shutdown.png"/>
@@ -178,7 +178,7 @@
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
   		<taskItem label="%command.wake.ahenks.task" pluginName="wol" 
-  		pluginVersion="1.0.0" 
+  		pluginVersion="1.1" 
   		taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeAhenksTask" 
   		selectionType="multi" description="Seçili ahenk makine/leri uyandırmak için kullanılan eklentidir.&#xA;Makine/leri uyandırmak için tıklayınız.. "
   		imagePath="wol.png"/>
@@ -187,7 +187,7 @@
   	<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
   		<taskItem label="%command.wake.task" pluginName="wol" 
-  		pluginVersion="1.0.0" 
+  		pluginVersion="1.1" 
   		taskCommandId="tr.org.liderahenk.liderconsole.commands.WakeMachineTask" 
   		description="Bir makineyi ya da makineleri uyandırmak için eklentinin kurulu olduğu çevrimiçi herhangi bir Ahenk makinesi üzerinden uyandırma komutu gönderilir.&#xA;Makine uyandırmak için tıklayınız.."
   		imagePath="wol.png"/>
